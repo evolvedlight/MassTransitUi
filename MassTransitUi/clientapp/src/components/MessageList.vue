@@ -1,7 +1,7 @@
 <template>
   <div>
     <p>You have {{ messages.length }} messages</p>
-    <table>
+    <table class="table table-striped table-hover">
       <thead>
         <th>Id</th>
         <th>Queue</th>
@@ -17,7 +17,7 @@
           <td>{{ message.MessageId }}</td>
           <td>{{ message.Fault }}</td>
           <td>{{ message.ErrorMessage }}</td>
-          <td><a @click="retryMessage(message)">Retry</a> {{ message.Status }} </td>
+          <td><a class="btn btn-primary" @click="retryMessage(message)">Retry</a> {{ message.Status }} </td>
         </tr>
       </tbody>
     </table>
