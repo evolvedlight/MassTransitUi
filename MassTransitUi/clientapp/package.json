@@ -1,0 +1,17 @@
+{
+  "name": "clientapp",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "axios": "^0.20.0",
+    "vue": "^3.0.0-rc.1"
+  },
+  "devDependencies": {
+    "@aspnet/signalr": "^1.1.4",
+    "@vue/compiler-sfc": "^3.0.0-rc.1",
+    "vite": "^1.0.0-rc.1"
+  }
+}
