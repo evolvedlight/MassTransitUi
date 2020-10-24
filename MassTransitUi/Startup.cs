@@ -39,7 +39,7 @@ namespace MassTransitUi
 
             services.AddSpaStaticFiles(c =>
             {
-                c.RootPath = "clientapp/dist";
+                c.RootPath = "clientdist";
             });
 
             services.AddSignalR();
@@ -71,10 +71,18 @@ namespace MassTransitUi
                 endpoints.MapHub<ErrorQueueHub>("/errorQueueHub");
             });
 
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetRequiredService<MassTransitUiContext>();
+                context.Database.Migrate();
+            }
+
             app.UseSpa(c =>
             {
-                c.UseProxyToSpaDevelopmentServer("http://localhost:3000");
-                //c.Options.SourcePath
+                if (env.IsDevelopment() && Environment.UserInteractive && Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "false")
+                {
+                    c.UseProxyToSpaDevelopmentServer("http://localhost:3000");
+                }
             });
         }
     }
