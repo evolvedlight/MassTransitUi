@@ -2,6 +2,7 @@
 using MassTransitUi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 
 namespace MassTransitUi.Controllers
@@ -11,10 +12,12 @@ namespace MassTransitUi.Controllers
     public class MessageController : ControllerBase
     {
         private readonly MassTransitUiContext _dbContext;
+        private readonly MassTransitSettings _settings;
 
-        public MessageController(MassTransitUiContext dbContext)
+        public MessageController(MassTransitUiContext dbContext, IOptions<MassTransitSettings> settings)
         {
             _dbContext = dbContext;
+            _settings = settings.Value;
         }
 
         [HttpPost("{messageId}/retry")]
@@ -31,12 +34,12 @@ namespace MassTransitUi.Controllers
             }
 
             // Resend message
-            ConnectionFactory factory = new ConnectionFactory();
-            // "guest"/"guest" by default, limited to localhost connections
-            factory.UserName = "nzyevrow";
-            factory.Password = "6bjmHqKxdNyMTL48RqTgWXH90cgXJTF6";
-            factory.HostName = "sparrow.rmq.cloudamqp.com";
-            factory.VirtualHost = "nzyevrow";
+            var factory = new ConnectionFactory();
+
+            factory.UserName = _settings.UserName;
+            factory.Password = _settings.Password;
+            factory.HostName = _settings.HostName;
+            factory.VirtualHost = _settings.VirtualHost;
 
             var _conn = factory.CreateConnection();
 

@@ -24,7 +24,7 @@
           <th>Actions</th>
         </thead>
         <tbody>
-          <tr v-for="message in messages" :key="message.Id">
+          <tr v-for="message in filteredMessages" :key="message.Id">
             <td>{{ message.Id }}</td>
             <td>{{ message.Queue }}</td>
             <td>{{ message.MessageId }}</td>
@@ -53,6 +53,7 @@ export default {
   name: 'Messages',
   props: {
     messages: Array,
+    quickFilter: String,
   },
   data () {
     return {
@@ -86,6 +87,17 @@ export default {
         message.Status = "error on retry"
         console.log(error);
       });
+    }
+  },
+  computed: {
+    filteredMessages() {
+      return this.messages.filter(
+        m => m.Queue.toLowerCase().includes(this.quickFilter.toLowerCase())
+        || m.MessageId.toLowerCase().includes(this.quickFilter.toLowerCase())
+        || m.ErrorMessage?.toLowerCase()?.includes(this.quickFilter.toLowerCase())
+        || m.Content?.toLowerCase()?.includes(this.quickFilter.toLowerCase())
+
+      )
     }
   }
 }
