@@ -41,4 +41,4 @@ jobs:
           # Path to the Dockerfile
           file: MassTransitUi/Dockerfile
           push: true
-          tags: "evolvedlight/MassTransitUi:latest"
+          tags: "evolvedlight/masstransitui:latest"
