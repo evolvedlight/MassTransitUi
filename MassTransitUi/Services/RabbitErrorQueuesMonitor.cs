@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,17 +12,20 @@ namespace MassTransitUi.Services
     public class RabbitErrorQueuesMonitor : IHostedService, IDisposable
     {
         private IConnection _conn;
-        private IModel _channel;
+        private Dictionary<string, IModel> _channels;
         private readonly IErrorPipelineService _errorPipelineService;
+        private readonly IManagementApiService _managementApiService;
         private readonly MassTransitSettings _settings;
 
-        public RabbitErrorQueuesMonitor(IErrorPipelineService errorPipelineService, IOptions<MassTransitSettings> settings)
+        public RabbitErrorQueuesMonitor(IErrorPipelineService errorPipelineService, IOptions<MassTransitSettings> settings, IManagementApiService managementApiService)
         {
             _errorPipelineService = errorPipelineService;
+            _managementApiService = managementApiService;
             _settings = settings.Value;
+            _channels = new Dictionary<string, IModel>();
         }
 
-        public Task StartAsync(CancellationToken cancellationToken)
+        public async Task StartAsync(CancellationToken cancellationToken)
         {
             ConnectionFactory factory = new ConnectionFactory();
 
@@ -32,33 +36,38 @@ namespace MassTransitUi.Services
 
             _conn = factory.CreateConnection();
 
-            _channel = _conn.CreateModel();
-
-            var consumer = new EventingBasicConsumer(_channel);
-            consumer.Received += async (ch, ea) =>
+            foreach (var queueName in await _managementApiService.GetQueues())
             {
-                await _errorPipelineService.Process("test_queue_error", ea);
+                var channel = _conn.CreateModel();
 
-                _channel.BasicAck(ea.DeliveryTag, false);
-            };
-            // this consumer tag identifies the subscription
-            // when it has to be cancelled
-            var consumerTag = _channel.BasicConsume("test_queue_error", false, consumer);
+                var consumer = new EventingBasicConsumer(channel);
+                consumer.Received += async (ch, ea) =>
+                {
+                    await _errorPipelineService.Process(queueName, ea);
 
-            return Task.CompletedTask;
+                    channel.BasicAck(ea.DeliveryTag, false);
+                };
+                _channels[queueName] = channel;
+
+                var consumerTag = channel.BasicConsume(queueName, false, consumer);     
+            }
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            if (_channel != null && _channel.IsOpen)
+            foreach ((var _, var channel) in _channels)
             {
-                _channel.Close();
+                if (channel != null && channel.IsOpen)
+                {
+                    channel.Close();
+                }
             }
 
             if (_conn != null && _conn.IsOpen)
             {
                 _conn.Close();
             }
+
             return Task.CompletedTask;
         }
 
@@ -71,9 +80,12 @@ namespace MassTransitUi.Services
             {
                 if (disposing)
                 {
-                    if (_channel != null && _channel.IsOpen)
+                    foreach ((var _, var channel) in _channels)
                     {
-                        _channel.Close();
+                        if (channel != null && channel.IsOpen)
+                        {
+                            channel.Close();
+                        }
                     }
 
                     if (_conn != null && _conn.IsOpen)

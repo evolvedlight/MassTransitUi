@@ -1,6 +1,7 @@
 import { createWebHistory, createRouter } from "vue-router";
 import Messages from "../views/Messages.vue";
 import Endpoints from "../views/Endpoints.vue";
+import Settings from "../views/Settings.vue";
 
 const routes = [{
         path: "/",
@@ -11,6 +12,11 @@ const routes = [{
         path: "/endpoints",
         name: "Endpoints",
         component: Endpoints,
+    },
+    {
+        path: "/settings",
+        name: "Settings",
+        component: Settings,
     },
 ];
 

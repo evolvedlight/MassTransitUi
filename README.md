@@ -14,4 +14,5 @@ dotnet user-secrets set "MassTransitSettings:UserName" "YourUserName"
 dotnet user-secrets set "MassTransitSettings:Password" "YourPassword"
 dotnet user-secrets set "MassTransitSettings:HostName" "sparrow.rmq.cloudamqp.com"
 dotnet user-secrets set "MassTransitSettings:VirtualHost" "YourVirtualHost"
+dotnet user-secrets set "MassTransitSettings:ManagementEndpoint" "https://example.host"
 ```
