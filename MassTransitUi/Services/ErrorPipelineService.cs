@@ -28,6 +28,7 @@ namespace MassTransitUi.Services
 
         public async Task Process(string queueName, BasicDeliverEventArgs ea)
         {
+            
             if (ea.BasicProperties.ContentType == "application/vnd.masstransit+json")
             {
                 var body = ea.Body;

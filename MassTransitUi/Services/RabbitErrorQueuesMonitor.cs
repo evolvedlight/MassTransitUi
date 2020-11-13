@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -36,7 +37,7 @@ namespace MassTransitUi.Services
 
             _conn = factory.CreateConnection();
 
-            foreach (var queueName in await _managementApiService.GetQueues())
+            foreach (var queueName in (await _managementApiService.GetQueues()).Where(q => q.EndsWith("_error")))
             {
                 var channel = _conn.CreateModel();
 
