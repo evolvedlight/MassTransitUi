@@ -18,9 +18,9 @@ RUN dotnet publish "MassTransitUi.csproj" -c Release -o /app/publish
 
 FROM node:12 as nodebuild
 WORKDIR /app
-COPY MassTransitUi/clientapp/package.json .
+COPY MassTransitUi/ClientApp/package.json .
 RUN npm install
-COPY MassTransitUi/clientapp/ .
+COPY MassTransitUi/ClientApp/ .
 RUN npm run build
 
 FROM base AS final
