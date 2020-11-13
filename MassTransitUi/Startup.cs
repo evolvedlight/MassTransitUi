@@ -40,6 +40,7 @@ namespace MassTransitUi
 
             services.AddSingleton<IErrorPipelineService, ErrorPipelineService>();
             services.AddSingleton<IManagementApiService, ManagementApiService>();
+            services.AddSingleton<RabbitMessageOutgoingService>();
 
             services.AddHostedService<RabbitErrorQueuesMonitor>();
         }

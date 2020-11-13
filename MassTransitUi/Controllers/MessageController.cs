@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using MassTransitUi.Models;
+using MassTransitUi.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using RabbitMQ.Client;
 
 namespace MassTransitUi.Controllers
 {
@@ -13,11 +13,13 @@ namespace MassTransitUi.Controllers
     {
         private readonly MassTransitUiContext _dbContext;
         private readonly MassTransitSettings _settings;
+        private readonly RabbitMessageOutgoingService _rabbit;
 
-        public MessageController(MassTransitUiContext dbContext, IOptions<MassTransitSettings> settings)
+        public MessageController(MassTransitUiContext dbContext, IOptions<MassTransitSettings> settings, RabbitMessageOutgoingService rabbit)
         {
             _dbContext = dbContext;
             _settings = settings.Value;
+            _rabbit = rabbit;
         }
 
         [HttpPost("{messageId}/retry")]
@@ -34,22 +36,27 @@ namespace MassTransitUi.Controllers
             }
 
             // Resend message
-            var factory = new ConnectionFactory {
-                UserName = _settings.UserName,
-                Password = _settings.Password,
-                HostName = _settings.HostName,
-                VirtualHost = _settings.VirtualHost
-            };
+            _rabbit.SendMessage(record);
 
-            var _conn = factory.CreateConnection();
+            _dbContext.FailedMessages.Remove(record);
+            await _dbContext.SaveChangesAsync();
 
-            var _channel = _conn.CreateModel();
-            var props = _channel.CreateBasicProperties();
-            props.ContentType = "text/test";
-            props.DeliveryMode = 2;
-            _channel.BasicPublish("", "test_queue", basicProperties: props, record.Content);
+            return Ok();
+        }
 
-            //_dbContext.FailedMessageHeaders.RemoveRange(record.Headers)
+        [HttpPost("{messageId}/delete")]
+        public async Task<IActionResult> DeleteMessage(long messageId)
+        {
+            var record = await _dbContext
+                .FailedMessages
+                .Include(m => m.Headers)
+                .SingleOrDefaultAsync(m => m.Id == messageId);
+
+            if (record == null)
+            {
+                return BadRequest("No message found with this ID");
+            }
+
             _dbContext.FailedMessages.Remove(record);
             await _dbContext.SaveChangesAsync();
 
