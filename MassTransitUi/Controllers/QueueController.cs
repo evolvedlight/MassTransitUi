@@ -21,6 +21,7 @@ namespace MassTransitUi.Controllers
         [HttpGet()]
         public async Task<IActionResult> GetQueues()
         {
+            _logger.LogInformation("Getting all queues");
             return Ok(await _managementApiService.GetQueues());
         }
     }
