@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ViteHosted;
 
 namespace MassTransitUi
 {
@@ -73,9 +74,11 @@ namespace MassTransitUi
 
             app.UseSpa(c =>
             {
+                c.Options.SourcePath = "ClientApp";
                 if (env.IsDevelopment() && Environment.UserInteractive && Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") != "true")
                 {
-                    c.UseProxyToSpaDevelopmentServer("http://localhost:3000");
+                    c.UseViteDevelopmentServer();
+                    //c.UseProxyToSpaDevelopmentServer("http://localhost:3000");
                 }
             });
         }

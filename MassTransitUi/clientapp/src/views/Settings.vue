@@ -36,6 +36,7 @@
               <tr>
                 <td>Server Address</td>
                 <td>ampq://xxx</td>
+              </tr>
             </tbody>
           </table>
         </div>
