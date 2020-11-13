@@ -12,7 +12,7 @@ namespace MassTransitUi.Services
     public class RabbitErrorQueuesMonitor : IHostedService, IDisposable
     {
         private IConnection _conn;
-        private Dictionary<string, IModel> _channels;
+        private readonly Dictionary<string, IModel> _channels;
         private readonly IErrorPipelineService _errorPipelineService;
         private readonly IManagementApiService _managementApiService;
         private readonly MassTransitSettings _settings;
@@ -27,12 +27,12 @@ namespace MassTransitUi.Services
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            ConnectionFactory factory = new ConnectionFactory();
-
-            factory.UserName = _settings.UserName;
-            factory.Password = _settings.Password;
-            factory.HostName = _settings.HostName;
-            factory.VirtualHost = _settings.VirtualHost;
+            var factory = new ConnectionFactory {
+                UserName = _settings.UserName,
+                Password = _settings.Password,
+                HostName = _settings.HostName,
+                VirtualHost = _settings.VirtualHost
+            };
 
             _conn = factory.CreateConnection();
 

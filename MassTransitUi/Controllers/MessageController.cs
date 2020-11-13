@@ -34,17 +34,17 @@ namespace MassTransitUi.Controllers
             }
 
             // Resend message
-            var factory = new ConnectionFactory();
-
-            factory.UserName = _settings.UserName;
-            factory.Password = _settings.Password;
-            factory.HostName = _settings.HostName;
-            factory.VirtualHost = _settings.VirtualHost;
+            var factory = new ConnectionFactory {
+                UserName = _settings.UserName,
+                Password = _settings.Password,
+                HostName = _settings.HostName,
+                VirtualHost = _settings.VirtualHost
+            };
 
             var _conn = factory.CreateConnection();
 
             var _channel = _conn.CreateModel();
-            IBasicProperties props = _channel.CreateBasicProperties();
+            var props = _channel.CreateBasicProperties();
             props.ContentType = "text/test";
             props.DeliveryMode = 2;
             _channel.BasicPublish("", "test_queue", basicProperties: props, record.Content);

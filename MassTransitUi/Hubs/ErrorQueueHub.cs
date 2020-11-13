@@ -14,7 +14,7 @@ namespace MassTransitUi.Hubs
             _dbContext = dbContext;
         }
 
-        public async override Task OnConnectedAsync()
+        public override async Task OnConnectedAsync()
         {
             var failedMessages = await _dbContext.FailedMessages.ToListAsync();
 

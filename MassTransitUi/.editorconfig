@@ -102,8 +102,14 @@ csharp_preferred_modifier_order = public,private,protected,readonly,override,asy
 #Style - qualification options
 
 #prefer fields not to be prefaced with this. or Me. in Visual Basic
-dotnet_style_qualification_for_field = false:suggestion
+dotnet_style_qualification_for_field = false:none
 #prefer methods to be prefaced with this. in C# or Me. in Visual Basic
-dotnet_style_qualification_for_method = true:suggestion
+dotnet_style_qualification_for_method = true:none
 #prefer properties not to be prefaced with this. or Me. in Visual Basic
-dotnet_style_qualification_for_property = false:suggestion
+dotnet_style_qualification_for_property = false:none
+
+# IDE0009: Member access should be qualified.
+dotnet_diagnostic.IDE0009.severity = none
+
+# IDE0005: Using directive is unnecessary.
+dotnet_diagnostic.IDE0005.severity = warning
