@@ -24,12 +24,12 @@ namespace MassTransitUi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<MassTransitSettings>(Configuration.GetSection(nameof(MassTransitSettings)));
+
             services.AddDbContext<MassTransitUiContext>(options =>
-                options.UseSqlite("Data Source=masstransitui.db"));
+                options.UseSqlite(Configuration.GetConnectionString("InternalDatabase")));
 
             services.AddControllers();
-
-            services.Configure<MassTransitSettings>(Configuration.GetSection(nameof(MassTransitSettings)));
 
             services.AddSpaStaticFiles(c =>
             {
