@@ -4,7 +4,7 @@
       <h1 class="h2">Failed Messages</h1>
       <div class="btn-toolbar mb-2 mb-md-0">
         <div class="btn-group mr-2">
-          <button type="button" class="btn btn-sm btn-outline-secondary">Retry All</button>
+          <button type="button" @click="retryAll" class="btn btn-sm btn-outline-secondary">Retry All</button>
           <button type="button" @click="deleteAll" class="btn btn-sm btn-outline-secondary">Delete All</button>
         </div>
         <!-- <div class="btn-group mr-2">
@@ -62,6 +62,21 @@ export default {
           })
           .catch(function (error) {
             message.Status = "error on delete"
+            console.log(error);
+          });
+        }
+      });
+    },
+    retryAll() {
+      this.messages.forEach(message => {
+        if (message.Status != "retried" && message.Status !== 'deleted') {
+            axios.post('/api/message/' + message.Id + "/retry", { })
+          .then(function (response) {
+            message.Status = "retried"
+            console.log(response);
+          })
+          .catch(function (error) {
+            message.Status = "error on retry"
             console.log(error);
           });
         }

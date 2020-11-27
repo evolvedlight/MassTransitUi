@@ -1,4 +1,4 @@
-![Image of UI](/docs/images/front.png)
+![Image of UI](/docs/images/demo.gif)
 
 Docker image:
 
