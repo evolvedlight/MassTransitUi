@@ -45,7 +45,8 @@ namespace MassTransitUi.Services
                     ErrorMessage = headers[MessageHeaders.FaultMessage],
                     RecievedTsUtc = DateTime.UtcNow,
                     Headers = headers?.Select((item) => new FailedMessageHeader { Key = item.Key, Value = item.Value.ToString() })?.ToList(),
-                    Content = body.ToArray()
+                    Content = body.ToArray(),
+                    Properties = System.Text.Json.JsonSerializer.Serialize(ea.BasicProperties)
                 };
 
                 using (var scope = _sp.CreateScope())
