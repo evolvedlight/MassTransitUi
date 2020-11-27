@@ -4,20 +4,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using HareDu.Core.Configuration;
 using HareDu.Registration;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace MassTransitUi.Services
 {
     public class ManagementApiService : IManagementApiService
     {
-        private readonly ILogger<ManagementApiService> _logger;
         private readonly MassTransitSettings _settings;
         private readonly HareDuConfig _config;
 
-        public ManagementApiService(ILogger<ManagementApiService> logger, IOptions<MassTransitSettings> settings)
+        public ManagementApiService(IOptions<MassTransitSettings> settings)
         {
-            _logger = logger;
             _settings = settings.Value;
 
             var provider = new HareDuConfigProvider();

@@ -3,7 +3,6 @@ using MassTransitUi.Models;
 using MassTransitUi.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace MassTransitUi.Controllers
 {
@@ -12,13 +11,11 @@ namespace MassTransitUi.Controllers
     public class MessageController : ControllerBase
     {
         private readonly MassTransitUiContext _dbContext;
-        private readonly MassTransitSettings _settings;
         private readonly RabbitMessageOutgoingService _rabbit;
 
-        public MessageController(MassTransitUiContext dbContext, IOptions<MassTransitSettings> settings, RabbitMessageOutgoingService rabbit)
+        public MessageController(MassTransitUiContext dbContext, RabbitMessageOutgoingService rabbit)
         {
             _dbContext = dbContext;
-            _settings = settings.Value;
             _rabbit = rabbit;
         }
 

@@ -5,7 +5,6 @@ using MassTransitUi.Hubs;
 using MassTransitUi.Models;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using RabbitMQ.Client.Events;
 using System;
@@ -17,12 +16,10 @@ namespace MassTransitUi.Services
 {
     public class ErrorPipelineService : IErrorPipelineService
     {
-        private readonly ILogger<ErrorPipelineService> _logger;
         private readonly IServiceProvider _sp;
 
-        public ErrorPipelineService(ILogger<ErrorPipelineService> logger, IServiceProvider sp)
+        public ErrorPipelineService(IServiceProvider sp)
         {
-            _logger = logger;
             _sp = sp;
         }
 

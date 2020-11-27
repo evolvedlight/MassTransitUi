@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using MassTransitUi.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
 
 namespace MassTransitUi.Services
 {
@@ -14,9 +12,12 @@ namespace MassTransitUi.Services
         private readonly MassTransitSettings _settings;
         private readonly IConnection _conn;
         private readonly IModel _channel;
+        private readonly ILogger<RabbitMessageOutgoingService> _logger;
 
         public RabbitMessageOutgoingService(ILogger<RabbitMessageOutgoingService> logger, IOptions<MassTransitSettings> settings)
         {
+            _logger = logger;
+
             _settings = settings.Value;
             var factory = new ConnectionFactory {
                 UserName = _settings.UserName,
@@ -53,9 +54,11 @@ namespace MassTransitUi.Services
             props.Type = deliveredFailedMessageProperties.Type;
             props.AppId = deliveredFailedMessageProperties.UserId;
 
-            var likelyQueue = failedMessage.Queue.Replace("_error", "");
+            var queue = failedMessage.Queue.Replace("_error", "");
 
-            _channel.BasicPublish("", likelyQueue, basicProperties: props, failedMessage.Content);
+            _channel.BasicPublish("", queue, basicProperties: props, failedMessage.Content);
+
+            _logger.LogInformation("Retried {MessageId} into {queue}", props.MessageId, queue);
         }
     }
 }
