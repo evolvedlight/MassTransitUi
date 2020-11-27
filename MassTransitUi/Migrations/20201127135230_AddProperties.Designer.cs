@@ -3,14 +3,16 @@ using System;
 using MassTransitUi.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MassTransitUi.Migrations
 {
     [DbContext(typeof(MassTransitUiContext))]
-    partial class MassTransitUiContextModelSnapshot : ModelSnapshot
+    [Migration("20201127135230_AddProperties")]
+    partial class AddProperties
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,8 +33,8 @@ namespace MassTransitUi.Migrations
                     b.Property<string>("MessageId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Properties")
-                        .HasColumnType("TEXT");
+                    b.Property<byte[]>("Properties")
+                        .HasColumnType("BLOB");
 
                     b.Property<string>("Queue")
                         .HasColumnType("TEXT");

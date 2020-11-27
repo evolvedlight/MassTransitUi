@@ -15,6 +15,7 @@ namespace MassTransitUi.Models
         [Required]
         public List<FailedMessageHeader> Headers { get; set; }
         public string ErrorMessage { get; internal set; }
+        public string Properties { get; internal set; }
     }
 
     public class FailedMessageHeader
