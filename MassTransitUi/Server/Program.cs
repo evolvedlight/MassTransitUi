@@ -30,7 +30,7 @@ builder.Services.AddSingleton<RabbitMessageOutgoingService>();
 builder.Services.AddHostedService<RabbitErrorQueuesMonitor>();
 
 var app = builder.Build();
-app.UseResponseCompression();
+// app.UseResponseCompression();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
