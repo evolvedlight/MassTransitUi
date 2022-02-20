@@ -56,4 +56,10 @@ app.MapControllers();
 app.MapHub<ErrorQueueHub>("/error-queue-hub");
 app.MapFallbackToFile("index.html");
 
+using (var scope = app.Services.CreateScope())
+{
+  var context = scope.ServiceProvider.GetRequiredService<MassTransitUiContext>();
+  context.Database.Migrate();
+}
+
 app.Run();

@@ -366,3 +366,4 @@ FodyWeavers.xsd
 masstransitui.db
 masstransitui.db-shm
 masstransitui.db-wal
+MassTransitUi/Client/wwwroot/css/output.css
