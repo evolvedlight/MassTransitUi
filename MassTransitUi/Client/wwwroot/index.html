@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full bg-white">
 
 <head>
     <meta charset="utf-8" />
@@ -7,23 +7,25 @@
     <title>MassTransitUi</title>
     <base href="/" />
     <link href="css/output.css" rel="stylesheet" />
-    <link href="css/app.css" rel="stylesheet" />
-    <link href="MassTransitUi.Client.styles.css" rel="stylesheet" />
+    <!-- <link href="css/app.css" rel="stylesheet" /> -->
+    <!-- <link href="MassTransitUi.Client.styles.css" rel="stylesheet" /> -->
     <link href="manifest.json" rel="manifest" />
     <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
     <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png" />
 </head>
 
-<body>
+<body class="h-full">
     <div id="app">Loading...</div>
 
-    <div id="blazor-error-ui">
+    <!-- <div id="blazor-error-ui">
         An unhandled error has occurred.
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
-    </div>
+    </div> -->
     <script src="_framework/blazor.webassembly.js"></script>
-    <script>navigator.serviceWorker.register('service-worker.js');</script>
+    <script>
+        navigator.serviceWorker.register('service-worker.js');
+    </script>
 </body>
 
 </html>
