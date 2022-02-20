@@ -37,6 +37,6 @@ jobs:
         uses: docker/build-push-action@v2.0.1
         with:
           # Path to the Dockerfile
-          file: MassTransitUi\Server\Dockerfile
+          file: MassTransitUi/Server/Dockerfile
           push: true
           tags: "evolvedlight/masstransitui:latest"
