@@ -43,7 +43,7 @@ namespace MassTransitUi.Server.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("RecievedTsUtc")
+                    b.Property<DateTime>("ReceivedTsUtc")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

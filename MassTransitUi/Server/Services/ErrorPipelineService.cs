@@ -36,7 +36,7 @@ namespace MassTransitUi.Server.Services
                     MessageId = res.MessageId,
                     Queue = queueName,
                     ErrorMessage = headers[MessageHeaders.FaultMessage],
-                    RecievedTsUtc = DateTime.UtcNow,
+                    ReceivedTsUtc = DateTime.UtcNow,
                     Headers = headers?.Select((item) => new FailedMessageHeader { Key = item.Key, Value = item.Value.ToString() })?.ToList(),
                     Content = body.ToArray(),
                     Properties = System.Text.Json.JsonSerializer.Serialize(ea.BasicProperties)

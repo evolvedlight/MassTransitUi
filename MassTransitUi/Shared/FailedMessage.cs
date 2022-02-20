@@ -7,7 +7,7 @@ namespace MassTransitUi.Shared
         public long Id { get; set; }
         public string MessageId { get; set; }
         public string Queue { get; set; }
-        public DateTime RecievedTsUtc { get; set; }
+        public DateTime ReceivedTsUtc { get; set; }
         public byte[] Content { get; set; }
 
         [Required]

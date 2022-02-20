@@ -1,0 +1,150 @@
+@page "/message/{id:long}"
+@using MassTransitUi.Shared
+@using System.Text.Json
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<PageTitle>@title</PageTitle>
+<div class="lg:pl-64 flex flex-col">
+  <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6">
+      <!-- This example requires Tailwind CSS v2.0+ -->
+      <div class="lg:flex lg:items-center lg:justify-between">
+        <div class="flex-1 min-w-0">
+          <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">Message @FailedMessage?.MessageId</h2>
+          <div class="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-0 sm:space-x-6">
+            <div class="mt-2 flex items-center text-sm text-gray-500">
+              <!-- Heroicon name: solid/briefcase -->
+              <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
+              @FailedMessage?.Queue
+            </div>
+            <div class="mt-2 flex items-center text-sm text-gray-500">
+              <!-- Heroicon name: solid/location-marker -->
+              <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                  clip-rule="evenodd" />
+              </svg>
+              @FailedMessage?.ReceivedTsUtc
+            </div>
+            <div class="mt-2 flex items-center text-sm text-gray-500">
+              <!-- Heroicon name: solid/currency-dollar -->
+              <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+              </svg>
+              Retries: 0
+            </div>
+          </div>
+        </div>
+        <div class="mt-5 flex lg:mt-0 lg:ml-4">
+          @* <span class="hidden sm:block">
+            <button type="button" 
+              class="after:inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+              <!-- Heroicon name: solid/pencil -->
+              <svg class="-ml-1 mr-2 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                fill="currentColor" aria-hidden="true">
+                <path
+                  d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+              </svg>
+              Edit
+            </button>
+          </span> *@
+
+          <span class="sm:ml-3">
+            <button type="button" onclick="async() => await RetryMessage(FailedMessage.Id)"
+              class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+              <!-- Heroicon name: solid/check -->
+              <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                aria-hidden="true">
+                <path fill-rule="evenodd"
+                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                  clip-rule="evenodd" />
+              </svg>
+              Retry
+            </button>
+          </span>
+
+          <span class="hidden sm:block ml-3">
+            <button type="button" @onclick="async() => await DeleteMessage(FailedMessage.Id)"
+              class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+              <!-- Heroicon name: solid/link -->
+              <svg class="-ml-1 mr-2 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                fill="white" aria-hidden="true">
+                <path fill-rule="evenodd"
+                  d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z"
+                  clip-rule="evenodd" />
+              </svg>
+              Delete
+            </button>
+          </span>
+
+
+
+          
+        </div>
+      </div>
+
+    </div>
+    <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
+      <dl class="sm:divide-y sm:divide-gray-200">
+        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">Message Id</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">@FailedMessage?.MessageId</dd>
+        </div>
+        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">Queue</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">@FailedMessage?.Queue</dd>
+        </div>
+        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">Error Message</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">@FailedMessage?.ErrorMessage</dd>
+        </div>
+        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">Timestamp</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">@FailedMessage?.ReceivedTsUtc</dd>
+        </div>
+        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">Content</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            <pre>@(FailedMessage != null ? JsonPrettify(System.Text.Encoding.Default.GetString(FailedMessage.Content)) : "")</pre>
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</div>
+
+@code {
+  [Parameter]
+  public long? id { get; set; }
+  public FailedMessage? FailedMessage { get; set; }
+  public string title { get; set; } = "Loading message..";
+
+  protected override async Task OnInitializedAsync()
+  {
+    FailedMessage = await Http.GetFromJsonAsync<FailedMessage>($"api/message/{id}");
+    title = $"Message {FailedMessage?.MessageId}";
+  }
+
+  public static string JsonPrettify(string json)
+  {
+    using var jDoc = JsonDocument.Parse(json);
+    return JsonSerializer.Serialize(jDoc, new JsonSerializerOptions { WriteIndented = true });
+  }
+
+  public async Task RetryMessage(long messageId)
+  {
+    await Http.PostAsync($"api/message/{messageId}/retry", null);
+    NavigationManager.NavigateTo("/");
+  }
+  public async Task DeleteMessage(long messageId)
+  {
+    await Http.DeleteAsync($"api/message/{messageId}");
+    NavigationManager.NavigateTo("/");
+  }
+}

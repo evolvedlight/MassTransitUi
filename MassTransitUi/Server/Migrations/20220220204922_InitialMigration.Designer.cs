@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MassTransitUi.Server.Migrations
 {
     [DbContext(typeof(MassTransitUiContext))]
-    [Migration("20220220170228_InitialMigration")]
+    [Migration("20220220204922_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,7 +45,7 @@ namespace MassTransitUi.Server.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("RecievedTsUtc")
+                    b.Property<DateTime>("ReceivedTsUtc")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

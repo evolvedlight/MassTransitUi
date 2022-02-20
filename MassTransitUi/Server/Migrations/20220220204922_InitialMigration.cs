@@ -17,7 +17,7 @@ namespace MassTransitUi.Server.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     MessageId = table.Column<string>(type: "TEXT", nullable: false),
                     Queue = table.Column<string>(type: "TEXT", nullable: false),
-                    RecievedTsUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    ReceivedTsUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Content = table.Column<byte[]>(type: "BLOB", nullable: false),
                     ErrorMessage = table.Column<string>(type: "TEXT", nullable: false),
                     Properties = table.Column<string>(type: "TEXT", nullable: false)
