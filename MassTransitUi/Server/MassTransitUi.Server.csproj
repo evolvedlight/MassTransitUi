@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk.Web">
+   <PropertyGroup>
+      <TargetFramework>net6.0</TargetFramework>
+      <Nullable>enable</Nullable>
+      <ImplicitUsings>enable</ImplicitUsings>
+   </PropertyGroup>
+   <ItemGroup>
+      <PackageReference Include="MassTransit.RabbitMq" Version="7.3.1" />
+      <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.2" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.2">
+         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+         <PrivateAssets>all</PrivateAssets>
+      </PackageReference>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.2" />
+      <PackageReference Include="RabbitMQ.Client" Version="6.2.3" />
+      <PackageReference Include="HareDu.CoreIntegration" Version="2.2.3" />
+   </ItemGroup>
+   <ItemGroup>
+      <ProjectReference Include="..\Client\MassTransitUi.Client.csproj" />
+      <ProjectReference Include="..\Shared\MassTransitUi.Shared.csproj" />
+   </ItemGroup>
+   <ItemGroup>
+     <Folder Include="Controllers\" />
+   </ItemGroup>
+</Project>
