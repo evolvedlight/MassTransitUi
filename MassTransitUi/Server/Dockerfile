@@ -15,7 +15,7 @@ COPY . .
 WORKDIR "/src/MassTransitUi/Server"
 RUN dotnet build "MassTransitUi.Server.csproj" -c Release -o /app/build
 
-FROM node:14 as nodebuild
+FROM node:16 as nodebuild
 WORKDIR /app
 COPY ["MassTransitUi/Client/package.json", "package.json"]
 RUN npm install
