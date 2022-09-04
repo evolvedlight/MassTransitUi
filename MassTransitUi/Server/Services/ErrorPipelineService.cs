@@ -27,7 +27,6 @@ namespace MassTransitUi.Server.Services
                 var reader = new MemoryStream(body.ToArray());
                 await reader.FlushAsync();
                 reader.Seek(0, SeekOrigin.Begin);
-                var deserialiser = new SystemTextJsonMessageSerializer();
                 var ops = SystemTextJsonMessageSerializer.Options;
                 var res = await System.Text.Json.JsonSerializer.DeserializeAsync<MessageEnvelope>(reader, ops);
 

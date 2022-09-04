@@ -114,6 +114,13 @@
             <pre>@(FailedMessage != null ? JsonPrettify(System.Text.Encoding.Default.GetString(FailedMessage.Content)) : "")</pre>
           </dd>
         </div>
+        @foreach (var header in FailedMessage?.Headers)
+        {
+          <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">@header.Key</dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">@((MarkupString)header.Value.Replace("\r", "<br>\r\n"))</dd>
+          </div>
+        }
       </dl>
     </div>
   </div>
