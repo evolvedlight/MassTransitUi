@@ -1,12 +1,11 @@
 ﻿using MassTransit;
-using MassTransit.Courier;
 using MassTransit.Serialization;
 using MassTransitUi.Server.Data;
 using MassTransitUi.Server.Hubs;
 using MassTransitUi.Shared;
 using Microsoft.AspNetCore.SignalR;
-using Newtonsoft.Json;
 using RabbitMQ.Client.Events;
+using System.Text.Json;
 
 namespace MassTransitUi.Server.Services
 {
@@ -25,10 +24,12 @@ namespace MassTransitUi.Server.Services
             if (ea.BasicProperties.ContentType == "application/vnd.masstransit+json")
             {
                 var body = ea.Body;
-                var reader = new StreamReader(new MemoryStream(body.ToArray()));
-                var jsonReader = new JsonTextReader(reader);
-
-                var res = SerializerCache.Deserializer.Deserialize<MessageEnvelope>(jsonReader);
+                var reader = new MemoryStream(body.ToArray());
+                await reader.FlushAsync();
+                reader.Seek(0, SeekOrigin.Begin);
+                var deserialiser = new SystemTextJsonMessageSerializer();
+                var ops = SystemTextJsonMessageSerializer.Options;
+                var res = await System.Text.Json.JsonSerializer.DeserializeAsync<MessageEnvelope>(reader, ops);
 
                 var headers = ea.BasicProperties.Headers.ToDictionary(x => x.Key, x => System.Text.Encoding.UTF8.GetString((byte[])x.Value));
 
