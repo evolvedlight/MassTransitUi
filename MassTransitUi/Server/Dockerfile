@@ -28,4 +28,5 @@ RUN dotnet publish "MassTransitUi.Server.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+COPY --from=nodebuild /app/publish/wwwroot/css/output.css /app/wwwroot/css/output.css
 ENTRYPOINT ["dotnet", "MassTransitUi.Server.dll"]
