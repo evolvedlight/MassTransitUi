@@ -27,7 +27,7 @@
 
   <ItemGroup>
     <Content Update="wwwroot\css\output.css">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
