@@ -14,12 +14,14 @@ namespace MassTransitUi.Server.Services
     {
         private IConnection _conn;
         private readonly Dictionary<string, IModel> _channels;
+        private readonly ILogger<RabbitErrorQueuesMonitor> _logger;
         private readonly IErrorPipelineService _errorPipelineService;
         private readonly IManagementApiService _managementApiService;
         private readonly MassTransitSettings _settings;
 
-        public RabbitErrorQueuesMonitor(IErrorPipelineService errorPipelineService, IOptions<MassTransitSettings> settings, IManagementApiService managementApiService)
+        public RabbitErrorQueuesMonitor(ILogger<RabbitErrorQueuesMonitor> logger, IErrorPipelineService errorPipelineService, IOptions<MassTransitSettings> settings, IManagementApiService managementApiService)
         {
+            _logger = logger;
             _errorPipelineService = errorPipelineService;
             _managementApiService = managementApiService;
             _settings = settings.Value;
@@ -28,6 +30,7 @@ namespace MassTransitUi.Server.Services
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
+            _logger.LogInformation($"Connecting to {_settings.HostName}:{_settings.VirtualHost}");
             var factory = new ConnectionFactory {
                 UserName = _settings.UserName,
                 Password = _settings.Password,
