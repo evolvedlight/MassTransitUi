@@ -22,12 +22,8 @@ How to develop:
 Check out the code
 
 Install RabbitMq locally
-Start a watch process for css changes:
-```
-cd MassTransitUi\Client
-npm run tailwind
-```
-In another window, start the project:
+
+In the console, start the project:
 ```
 dotnet watch --project MassTransitUi\Server\MassTransitUi.Server.csproj
 ```

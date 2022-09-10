@@ -4,6 +4,7 @@ using MassTransitUi.Server.Hubs;
 using MassTransitUi.Server.Services;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
+using Tailwind;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,8 +49,12 @@ app.UseHttpsRedirection();
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
 
-app.UseRouting();
+if (app.Environment.IsDevelopment())
+{
+    app.RunTailwind("tailwind", "../Client/");
+}
 
+app.UseRouting();
 
 app.MapRazorPages();
 app.MapControllers();
