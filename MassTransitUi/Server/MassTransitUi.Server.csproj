@@ -15,7 +15,7 @@
          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
          <PrivateAssets>all</PrivateAssets>
       </PackageReference>
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.8" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.1" />
       <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
       <PackageReference Include="RabbitMQ.Client" Version="6.4.0" />
       <PackageReference Include="HareDu.CoreIntegration" Version="2.2.3" />
